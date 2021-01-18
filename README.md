@@ -1,8 +1,19 @@
 # BEEM AUTH
 
-Generate files from proto:
+Install dependencies
+```
+go get -u google.golang.org/protobuf/cmd/protoc-gen-go
+go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+```
+
+Generate messages from proto:
 ```shell
-protoc -I=./proto --go_out=./internal --go_opt=module=github.com/martijnjanssen/beem-auth ./proto/account-creation.proto
+protoc -I=./proto --go_out=./internal --go_opt=module=beem-auth ./proto/account-creation.proto
+```
+
+Generate services
+```
+protoc -I=./proto --go-grpc_out=./internal --go-grpc_opt=module=beem-auth ./proto/account-creation.proto
 ```
 
 
