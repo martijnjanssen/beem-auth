@@ -2,8 +2,8 @@ export GO111MODULE=on
 
 .PHONY: dependencies
 dependencies:
-	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
-	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	go get -u google.golang.org/protobuf/cmd/protoc-gen-go@v1.25.0
+	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
 
 .PHONY: generate
 generate:

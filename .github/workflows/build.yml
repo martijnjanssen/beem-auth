@@ -20,4 +20,4 @@ jobs:
       - name: Check GRPC files
         run: |
           make generate
-          git diff --exit-code
+          git diff --exit-code internal/pb
