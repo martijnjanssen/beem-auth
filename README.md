@@ -1,16 +1,24 @@
 # BEEM AUTH
 
 Install dependencies
-```
+```sh
 make dependencies
 ```
 
 Generate messages and services from proto:
-```
+```sh
 make generate
 ```
 
+Start the database
+``` sh
+docker run --name beem-auth-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=beem-auth -d 
+```
 
+For testing
+``` sh
+make test
+```
 
 
 # email/password account creation
