@@ -22,5 +22,8 @@ jobs:
           make generate
           git diff --exit-code internal/pb
 
-      - name: Test
-        run: make test
+      - name: Test (with coverage report)
+        run: make cover
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1

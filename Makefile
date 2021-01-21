@@ -16,3 +16,16 @@ generate:
 .PHONY: test
 test:
 	go test ./...
+
+.PHONY: cover
+cover:
+	go test ./... -coverprofile=coverage.out
+	go tool cover -func=coverage.out
+
+.PHONY: coverreport
+coverreport:
+	go tool cover -html=coverage.out
+
+.PHONY: clean
+clean:
+	rm -f coverage.out
