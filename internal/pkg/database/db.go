@@ -13,6 +13,7 @@ func connect(host string, port string, user string, password string, dbName stri
 		return nil, fmt.Errorf("unable to connect to database: %w", err)
 	}
 
+	userMigrate(db)
 
 	return db, nil
 }
