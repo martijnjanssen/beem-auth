@@ -8,15 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUserMigrate(t *testing.T) {
-	tx := db.MustBegin()
-	assert.NoError(t, tx.Rollback())
-
-	err := userMigrate(tx)
-
-	assert.True(t, errors.Is(err, sql.ErrTxDone))
-}
-
 func TestUserCreateGet(t *testing.T) {
 	tx := db.MustBegin()
 
