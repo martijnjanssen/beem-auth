@@ -44,7 +44,7 @@ func StartTestPostgreSQL() (func(), *sqlx.DB) {
 	// exponential backoff-retry, because the application in the container might not be ready to accept connections yet
 	if err := pool.Retry(func() error {
 		var err error
-		db, err = connect("localhost", resource.GetPort("5432/tcp"), "postgres", "postgres", "beem_auth")
+		db, err = Connect("localhost", resource.GetPort("5432/tcp"), "postgres", "postgres", "beem_auth")
 		if err != nil {
 			return err
 		}
