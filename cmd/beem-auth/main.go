@@ -4,11 +4,12 @@ import (
 	"log"
 	"net"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 
 	"beem-auth/internal/pb"
 	"beem-auth/internal/pkg/database"
+	"beem-auth/internal/pkg/middleware"
 	service "beem-auth/internal/pkg/service"
 )
 
@@ -32,10 +33,15 @@ func main() {
 
 	grpcServer := grpc.NewServer(
 		// Interceptors are executed from left to right (or top to bottom as seen here)
-		grpc_middleware.WithUnaryServerChain(),
+		grpc_middleware.WithUnaryServerChain(
+			middleware.NewTransactionInterceptor(db),
+			// TODO: needs a panic recoveryhandler with a custom RecoveryHandlerFuncContext after the
+			// TransactionInterceptor
+			// https://github.com/grpc-ecosystem/go-grpc-middleware/blob/master/recovery/interceptors.go
+		),
 	)
 
-	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController(db))
+	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController())
 
 	log.Printf("started...")
 

@@ -8,8 +8,8 @@ import (
 
 	"beem-auth/internal/pkg/util"
 
+	"beem-auth/internal/pkg/middleware"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/jmoiron/sqlx"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -17,25 +17,23 @@ import (
 // AccountController implements the GRPC AccountService
 type accountController struct {
 	pb.UnimplementedAccountServiceServer
-
-	db *sqlx.DB
 }
 
-func NewAccountController(db *sqlx.DB) pb.AccountServiceServer {
-	return &accountController{
-		db: db,
-	}
+func NewAccountController() pb.AccountServiceServer {
+	return &accountController{}
 }
 
 // Create creates a new user
 func (a accountController) Create(ctx context.Context, req *pb.AccountCreateRequest) (*empty.Empty, error) {
+	tx := middleware.GetContextTx(ctx)
+
 	hashPassword, err := util.HashAndSalt(req.GetPassword())
 	if err != nil {
 		log.Printf("unable to hash password: %s", err)
 		return nil, status.Errorf(codes.Internal, "")
 	}
 
-	err = database.UserAdd(ctx, a.db, req.GetEmail(), hashPassword)
+	err = database.UserAdd(ctx, tx, req.GetEmail(), hashPassword)
 	if err != nil {
 		log.Printf("unable to create account: %s", err)
 		return nil, status.Errorf(codes.Internal, "")
