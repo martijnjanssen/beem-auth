@@ -20,6 +20,12 @@ For testing
 make test
 ```
 
+Start with docker compose
+
+``` sh
+docker-compose up
+```
+
 
 # email/password account creation
 

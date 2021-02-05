@@ -10,6 +10,7 @@ require (
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/jmoiron/sqlx v1.2.0
+	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.9.0
 	github.com/moby/term v0.0.0-20201216013528-df9cb8a40635 // indirect

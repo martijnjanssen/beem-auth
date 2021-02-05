@@ -1,0 +1,28 @@
+version: "3.9" # optional since v1.27.0
+services:
+    auth:
+        build: .
+        ports:
+            - 5051:5051
+        environment:
+            - BEEMAUTH_PORT=5051
+            - BEEMAUTH_DBHOST=database
+            - BEEMAUTH_DBPORT=5432
+            - BEEMAUTH_DBUSER=postgres
+            - BEEMAUTH_DBPASSWORD=postgres
+            - BEEMAUTH_DBNAME=beem_auth
+        depends_on:
+            database:
+                condition: service_healthy
+    database:
+        image: postgres:alpine
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_DB=beem_auth
+            - POSTGRES_PASSWORD=postgres
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5

@@ -22,6 +22,9 @@ jobs:
           make generate
           git diff --exit-code internal/pb
 
+      - name: Build
+        run: docker build .
+
       - name: Test (with coverage report)
         run: make cover
 

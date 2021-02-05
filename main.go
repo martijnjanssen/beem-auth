@@ -1,32 +1,45 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/kelseyhightower/envconfig"
 	"google.golang.org/grpc"
 
 	"beem-auth/internal/pb"
 	"beem-auth/internal/pkg/database"
 	"beem-auth/internal/pkg/middleware"
-	service "beem-auth/internal/pkg/service"
+	"beem-auth/internal/pkg/service"
 )
 
-const (
-	port = ":5051"
-)
+type Config struct {
+	Port       string
+	DbHost     string
+	DbPort     string
+	DbUser     string
+	DbPassword string
+	DbName     string
+}
 
 func main() {
 	log.Println("Running GRPC with version", grpc.Version)
 
-	db, err := database.Connect("localhost", "5432", "postgres", "postgres", "beem_auth")
+	var conf Config
+	err := envconfig.Process("beemauth", &conf)
+	if err != nil {
+		log.Fatalf("failed to parse environment variables: %v", err)
+	}
+
+	db, err := database.Connect(conf.DbHost, conf.DbPort, conf.DbUser, conf.DbPassword, conf.DbName)
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
 	// Listen to tcp port
-	lis, err := net.Listen("tcp", port)
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
