@@ -38,6 +38,11 @@ func main() {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
+	err = database.ApplyMigrations(db)
+	if err != nil {
+		log.Fatalf("failed to apply migrations: %v", err)
+	}
+
 	// Listen to tcp port
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.Port))
 	if err != nil {
