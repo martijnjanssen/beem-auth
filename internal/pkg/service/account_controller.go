@@ -1,14 +1,15 @@
 package service
 
 import (
-	"beem-auth/internal/pb"
-	"beem-auth/internal/pkg/database"
 	"context"
 	"log"
 
-	"beem-auth/internal/pkg/util"
-
+	"beem-auth/internal/pb"
+	"beem-auth/internal/pkg/database"
 	"beem-auth/internal/pkg/middleware"
+	"beem-auth/internal/pkg/util/email"
+	"beem-auth/internal/pkg/util/hash"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,17 +18,19 @@ import (
 // AccountController implements the GRPC AccountService
 type accountController struct {
 	pb.UnimplementedAccountServiceServer
+
+	mailer email.Mailer
 }
 
-func NewAccountController() pb.AccountServiceServer {
-	return &accountController{}
+func NewAccountController(mailer email.Mailer) pb.AccountServiceServer {
+	return &accountController{mailer: mailer}
 }
 
 // Create creates a new user
 func (a accountController) Create(ctx context.Context, req *pb.AccountCreateRequest) (*empty.Empty, error) {
 	tx := middleware.GetContextTx(ctx)
 
-	hashPassword, err := util.HashAndSalt(req.GetPassword())
+	hashPassword, err := hash.HashAndSalt(req.GetPassword())
 	if err != nil {
 		log.Printf("unable to hash password: %s", err)
 		return nil, status.Errorf(codes.Internal, "")
@@ -36,6 +39,17 @@ func (a accountController) Create(ctx context.Context, req *pb.AccountCreateRequ
 	err = database.UserAdd(ctx, tx, req.GetEmail(), hashPassword)
 	if err != nil {
 		log.Printf("unable to create account: %s", err)
+		return nil, status.Errorf(codes.Internal, "")
+	}
+
+	email := email.Email{
+		Recipient: req.GetEmail(),
+		Subject:   "New account",
+		Content:   "You have created a new beem-auth account. Welcome!",
+	}
+	err = a.mailer.SendEmail(email)
+	if err != nil {
+		log.Printf("unable to send email: %s", err)
 		return nil, status.Errorf(codes.Internal, "")
 	}
 

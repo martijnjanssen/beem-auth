@@ -4,6 +4,8 @@ services:
         build: .
         ports:
             - 5051:5051
+        env_file:
+            - ./dev.env
         environment:
             - BEEMAUTH_PORT=5051
             - BEEMAUTH_DBHOST=database

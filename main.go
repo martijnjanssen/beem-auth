@@ -13,15 +13,19 @@ import (
 	"beem-auth/internal/pkg/database"
 	"beem-auth/internal/pkg/middleware"
 	"beem-auth/internal/pkg/service"
+	"beem-auth/internal/pkg/util/email"
 )
 
 type Config struct {
-	Port       string
+	Port string
+
 	DbHost     string
 	DbPort     string
 	DbUser     string
 	DbPassword string
 	DbName     string
+
+	SendinblueKey string
 }
 
 func main() {
@@ -59,7 +63,9 @@ func main() {
 		),
 	)
 
-	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController())
+	sendinblue := email.NewSendinblue(conf.SendinblueKey)
+
+	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController(sendinblue))
 
 	log.Printf("started...")
 
