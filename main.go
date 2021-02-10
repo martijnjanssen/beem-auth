@@ -8,6 +8,7 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/kelseyhightower/envconfig"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	"beem-auth/internal/pb"
 	"beem-auth/internal/pkg/database"
@@ -24,6 +25,8 @@ type Config struct {
 	DbUser     string
 	DbPassword string
 	DbName     string
+
+	Profile string
 
 	SendinblueKey string
 }
@@ -67,8 +70,12 @@ func main() {
 
 	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController(sendinblue))
 
-	log.Printf("started...")
+	// Enable reflection for https://github.com/grpc/grpc/blob/master/doc/command_line_tool.md#usage
+	if conf.Profile == "dev" {
+		reflection.Register(grpcServer)
+	}
 
+	log.Printf("started...")
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

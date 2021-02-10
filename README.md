@@ -1,5 +1,7 @@
 # BEEM AUTH
 
+## First start
+
 Install dependencies
 ```sh
 make dependencies
@@ -10,21 +12,32 @@ Generate messages and services from proto:
 make generate
 ```
 
-Start the database
-``` sh
-docker run --name beem-auth-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=beem-auth -d 
-```
+## Testing
 
 For testing
 ``` sh
 make test
 ```
 
+For testing with coverage
+
+``` sh
+make cover
+make coverreport
+```
+
+## Running
+Copy the `dev.env.sample` to `dev.env` and fill in the required values.
 Start with docker compose
 
 ``` sh
 docker-compose up
 ```
+
+After code changes remember to run `docker-compose build`, otherwise code changes are not visible.
+
+# Making requests
+For testing purposes, there is a `make grpcui` command that is available which allows you to make postman-esque calls to the endpoints the server exposes.
 
 
 # email/password account creation
