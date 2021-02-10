@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"beem-auth/internal/pb"
@@ -36,16 +37,22 @@ func (a accountController) Create(ctx context.Context, req *pb.AccountCreateRequ
 		return nil, status.Errorf(codes.Internal, "")
 	}
 
-	err = database.UserAdd(ctx, tx, req.GetEmail(), hashPassword)
+	userId, err := database.UserAdd(ctx, tx, req.GetEmail(), hashPassword)
 	if err != nil {
 		log.Printf("unable to create account: %s", err)
+		return nil, status.Errorf(codes.Internal, "")
+	}
+
+	key, err := database.ChallengeCreate(ctx, tx, userId)
+	if err != nil {
+		log.Printf("unable to create challenge: %s", err)
 		return nil, status.Errorf(codes.Internal, "")
 	}
 
 	email := email.Email{
 		Recipient: req.GetEmail(),
 		Subject:   "New account",
-		Content:   "You have created a new beem-auth account. Welcome!",
+		Content:   fmt.Sprintf("You have created a new beem-auth account. Welcome! Your key is %s", key),
 	}
 	err = a.mailer.SendEmail(email)
 	if err != nil {

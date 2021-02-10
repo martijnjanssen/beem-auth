@@ -75,6 +75,21 @@ func TestCreateUserEmailError(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestCreateUserChallengeCreateError(t *testing.T) {
+	a, e, ctx, tx, rb := accountControllerHelper(db)
+	defer rb()
+
+	_ = tx.MustExec("DROP TABLE challenges")
+
+	e.On("SendEmail", mock.Anything).Return(nil)
+
+	_, err := a.Create(ctx, &pb.AccountCreateRequest{
+		Email:    mail,
+		Password: password,
+	})
+	assert.Error(t, err)
+}
+
 func accountControllerHelper(db *sqlx.DB) (pb.AccountServiceServer, *email.EmailMock, context.Context, *sqlx.Tx, func() error) {
 	e := email.NewEmailMock()
 

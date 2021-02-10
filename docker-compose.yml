@@ -23,6 +23,8 @@ services:
         environment:
             - POSTGRES_DB=beem_auth
             - POSTGRES_PASSWORD=postgres
+        volumes:
+            - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U postgres"]
             interval: 5s

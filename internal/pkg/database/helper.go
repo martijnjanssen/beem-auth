@@ -53,6 +53,11 @@ func StartTestPostgreSQL() (func(), *sqlx.DB) {
 		log.Fatalf("Could not connect to docker: %s", err)
 	}
 
+	_, err = db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+	if err != nil {
+		log.Fatalf("Could not create extension")
+	}
+
 	// Return a teardown function to call when we are done with the db in the test
 	return func() {
 		// You can't defer this because os.Exit doesn't care for defer

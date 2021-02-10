@@ -24,7 +24,7 @@ func TestTransactionInterceptor(t *testing.T) {
 	email := "user@example.com"
 	handlerFunc := func(ctx context.Context, req interface{}) (interface{}, error) {
 		tx := GetContextTx(ctx)
-		err := database.UserAdd(ctx, tx, email, "hashedPassword")
+		_, err := database.UserAdd(ctx, tx, email, "hashedPassword")
 
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func TestTransactionInterceptorRollback(t *testing.T) {
 	email := "user@example.com"
 	handlerFunc := func(ctx context.Context, req interface{}) (interface{}, error) {
 		tx := GetContextTx(ctx)
-		err := database.UserAdd(ctx, tx, email, "hashedPassword")
+		_, err := database.UserAdd(ctx, tx, email, "hashedPassword")
 		assert.NoError(t, err)
 
 		return nil, status.Errorf(codes.Internal, "this is an error to trigger a rollback")
