@@ -77,6 +77,7 @@ func main() {
 		reflection.Register(grpcServer)
 	}
 
+	web.SetDB(db)
 	cancelListen := web.ListenHTTP()
 
 	log.Printf("started...")

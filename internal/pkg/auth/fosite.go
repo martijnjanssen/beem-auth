@@ -3,12 +3,15 @@ package auth
 import (
 	"crypto/rand"
 	"crypto/rsa"
-	"github.com/ory/fosite"
+	"log"
 	"net/http"
 	"time"
+
+	"github.com/ory/fosite"
+	"github.com/ory/fosite/compose"
+
+	str "github.com/ory/fosite/storage"
 )
-import "github.com/ory/fosite/compose"
-import str "github.com/ory/fosite/storage"
 
 // This is the example storage that contains:
 // * an OAuth2 Client with id "my-client" and secret "foobar" capable of all auth and open id connect grant and response types.
@@ -35,7 +38,7 @@ var (
 func init() {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		panic("unable to create private key")
+		log.Fatal("unable to create private key")
 	}
 
 	oauth2Provider = compose.ComposeAllEnabled(config, storage, secret, privateKey)
@@ -57,7 +60,7 @@ func AuthorizeHandlerFunc(rw http.ResponseWriter, req *http.Request) {
 
 	// Normally, this would be the place where you would check if the user is logged in and gives his consent.
 	// We're simplifying things and just checking if the request includes a valid username and password
-	if req.Form.Get("username") != "peter" {
+	if req.FormValue("username") != "peter" {
 		rw.Header().Set("Content-Type", "text/html;charset=UTF-8")
 		rw.Write([]byte(`<h1>Login page</h1>`))
 		rw.Write([]byte(`
