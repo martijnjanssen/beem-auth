@@ -15,6 +15,7 @@ import (
 	"beem-auth/internal/pkg/middleware"
 	"beem-auth/internal/pkg/service"
 	"beem-auth/internal/pkg/util/email"
+	"beem-auth/internal/pkg/web"
 )
 
 type Config struct {
@@ -28,7 +29,8 @@ type Config struct {
 
 	Profile string
 
-	SendinblueKey string
+	SendinblueKey   string
+	MailCallbackURL string
 }
 
 func main() {
@@ -68,15 +70,18 @@ func main() {
 
 	sendinblue := email.NewSendinblue(conf.SendinblueKey)
 
-	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController(sendinblue))
+	pb.RegisterAccountServiceServer(grpcServer, service.NewAccountController(sendinblue, conf.MailCallbackURL))
 
 	// Enable reflection for https://github.com/grpc/grpc/blob/master/doc/command_line_tool.md#usage
 	if conf.Profile == "dev" {
 		reflection.Register(grpcServer)
 	}
 
+	cancelListen := web.ListenHTTP()
+
 	log.Printf("started...")
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
+		cancelListen()
 	}
 }

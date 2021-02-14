@@ -27,3 +27,13 @@ func ChallengeCreate(ctx context.Context, db Queryer, userId uuid.UUID) (string,
 
 	return str, nil
 }
+
+func ChallengeComplete(ctx context.Context, db Queryer, key string) (uuid.UUID, error) {
+	var userId uuid.UUID
+	err := db.GetContext(ctx, &userId, "DELETE FROM challenges WHERE key = $1 RETURNING user_id", key)
+	if err != nil {
+		return uuid.Nil, dbAccessError(err)
+	}
+
+	return userId, nil
+}

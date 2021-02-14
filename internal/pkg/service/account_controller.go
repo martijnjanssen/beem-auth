@@ -16,15 +16,18 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+var validateEmail string = `<html><head></head><h1>New beem-auth account</h1><p>You have created a new beem-auth account. Please validate your email address <a href=\"%s/challenge/complete?key=%s\">here</a>.</p></html>`
+
 // AccountController implements the GRPC AccountService
 type accountController struct {
 	pb.UnimplementedAccountServiceServer
 
-	mailer email.Mailer
+	mailer          email.Mailer
+	mailCallbackURL string
 }
 
-func NewAccountController(mailer email.Mailer) pb.AccountServiceServer {
-	return &accountController{mailer: mailer}
+func NewAccountController(mailer email.Mailer, mailCallbackURL string) pb.AccountServiceServer {
+	return &accountController{mailer: mailer, mailCallbackURL: mailCallbackURL}
 }
 
 // Create creates a new user
@@ -52,7 +55,7 @@ func (a accountController) Create(ctx context.Context, req *pb.AccountCreateRequ
 	email := email.Email{
 		Recipient: req.GetEmail(),
 		Subject:   "New account",
-		Content:   fmt.Sprintf("You have created a new beem-auth account. Welcome! Your key is %s", key),
+		Content:   fmt.Sprintf(validateEmail, a.mailCallbackURL, key),
 	}
 	err = a.mailer.SendEmail(email)
 	if err != nil {

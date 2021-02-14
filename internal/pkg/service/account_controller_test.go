@@ -93,7 +93,7 @@ func TestCreateUserChallengeCreateError(t *testing.T) {
 func accountControllerHelper(db *sqlx.DB) (pb.AccountServiceServer, *email.EmailMock, context.Context, *sqlx.Tx, func() error) {
 	e := email.NewEmailMock()
 
-	a := NewAccountController(e)
+	a := NewAccountController(e, "http://localhost:8081")
 	tx := db.MustBegin()
 	rb := tx.Rollback
 	ctx := middleware.SetContextTx(context.Background(), tx)
