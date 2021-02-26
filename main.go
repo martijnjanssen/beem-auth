@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net"
-
+	"github.com/gorilla/csrf"
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/kelseyhightower/envconfig"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"log"
+	"net"
 
 	"beem-auth/internal/pb"
 	"beem-auth/internal/pkg/database"
@@ -75,8 +75,10 @@ func main() {
 	// Enable reflection for https://github.com/grpc/grpc/blob/master/doc/command_line_tool.md#usage
 	if conf.Profile == "dev" {
 		reflection.Register(grpcServer)
+		csrf.Secure(false)
 	}
 
+	web.SetDB(db)
 	cancelListen := web.ListenHTTP()
 
 	log.Printf("started...")

@@ -1,6 +1,8 @@
 package web
 
 import (
+	"beem-auth/internal/pkg/hydra"
+	"github.com/gorilla/csrf"
 	"log"
 	"net/http"
 
@@ -9,8 +11,14 @@ import (
 
 func ListenHTTP() func() {
 	r := mux.NewRouter()
+	CSRF := csrf.Protect([]byte("RandomBeemAuthKeyTing"))
 
 	r.HandleFunc("/challenge/complete", wrapTransaction(challengeCompleteHandler))
+
+	loginEndpoint := r.PathPrefix("/login").Subrouter()
+	loginEndpoint.Use(CSRF)
+	loginEndpoint.HandleFunc("", hydra.GetLogin).Methods("GET")
+	loginEndpoint.HandleFunc("", hydra.PostLogin).Methods("POST")
 
 	srv := &http.Server{Addr: ":8081", Handler: r}
 
