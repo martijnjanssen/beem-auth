@@ -20,6 +20,8 @@ func ListenHTTP() func() {
 	loginEndpoint.HandleFunc("", hydra.GetLogin).Methods("GET")
 	loginEndpoint.HandleFunc("", hydra.PostLogin).Methods("POST")
 
+	r.HandleFunc("/consent", hydra.GetConsent)
+
 	srv := &http.Server{Addr: ":8081", Handler: r}
 
 	go func() {
