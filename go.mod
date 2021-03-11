@@ -3,22 +3,21 @@ module beem-auth
 go 1.15
 
 require (
-	cloud.google.com/go v0.76.0 // indirect
+	cloud.google.com/go v0.79.0 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
-	github.com/cncf/udpa/go v0.0.0-20201211205326-cc1b757b3edd // indirect
+	github.com/cncf/udpa/go v0.0.0-20210210032658-bff43e8824d0 // indirect
 	github.com/containerd/continuity v0.0.0-20201208142359-180525291bb7 // indirect
 	github.com/envoyproxy/protoc-gen-validate v0.4.1 // indirect
 	github.com/fullstorydev/grpcui v1.1.0 // indirect
 	github.com/fullstorydev/grpcurl v1.8.0 // indirect
 	github.com/golang/protobuf v1.4.3
-	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/csrf v1.7.0
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
-	github.com/jhump/protoreflect v1.8.1 // indirect
+	github.com/jhump/protoreflect v1.8.2 // indirect
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect
@@ -29,15 +28,14 @@ require (
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4 // indirect
 	github.com/sirupsen/logrus v1.7.0 // indirect
 	github.com/stretchr/testify v1.7.0
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
-	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
-	golang.org/x/oauth2 v0.0.0-20210201163806-010130855d6c // indirect
-	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
-	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf // indirect
+	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
+	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
+	golang.org/x/sys v0.0.0-20210309074719-68d13333faf2 // indirect
+	golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/genproto v0.0.0-20210207032614-bba0dbe2a9ea // indirect
-	google.golang.org/grpc v1.35.0
+	google.golang.org/genproto v0.0.0-20210310155132-4ce2db91004e // indirect
+	google.golang.org/grpc v1.36.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
 	google.golang.org/protobuf v1.25.1-0.20200805231151-a709e31e5d12
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
